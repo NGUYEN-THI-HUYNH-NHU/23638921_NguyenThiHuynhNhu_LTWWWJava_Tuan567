@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Tìm kiếm nhân viên')}"></head>
+<body>
+<nav th:replace="~{fragments :: nav}"></nav>
+<div class="container">
+    <h3>Tìm kiếm nhân viên</h3>
+
+    <form class="row g-2 mb-4" method="get" th:action="@{/employees/search}" th:object="${criteria}">
+        <div class="col-md-2"><input class="form-control" placeholder="ID" th:field="*{id}"></div>
+        <div class="col-md-3"><input class="form-control" placeholder="Tên chứa..." th:field="*{name}"></div>
+        <div class="col-md-1"><input class="form-control" placeholder="Tuổi từ" th:field="*{minAge}"></div>
+        <div class="col-md-1"><input class="form-control" placeholder="đến" th:field="*{maxAge}"></div>
+        <div class="col-md-2"><input class="form-control" placeholder="Lương &gt;" th:field="*{minSalary}"></div>
+        <div class="col-md-2">
+            <select class="form-select" th:field="*{positionId}">
+                <option value="">-- Chức vụ --</option>
+                <option th:each="p : ${positions}" th:text="${p.title}" th:value="${p.id}"></option>
+            </select>
+        </div>
+        <div class="col-md-1">
+            <button class="btn btn-primary w-100">Tìm</button>
+        </div>
+    </form>
+
+    <div th:if="${employees != null}">
+        <p>Tìm thấy <b th:text="${#lists.size(employees)}"></b> kết quả.</p>
+        <table class="table table-striped table-sm">
+            <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Họ tên</th>
+                <th>Vai trò</th>
+                <th>Tuổi</th>
+                <th>Lương</th>
+                <th>Phòng ban</th>
+                <th>Chức vụ</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="e : ${employees}">
+                <td th:text="${e.id}"></td>
+                <td><a th:href="@{/employees/{id}(id=${e.id})}" th:text="${e.name}"></a></td>
+                <td th:text="${e.role}"></td>
+                <td th:text="${e.age}"></td>
+                <td th:text="${#numbers.formatDecimal(e.salary, 0, 'COMMA', 0, 'POINT')}"></td>
+                <td th:text="${e.departmentName}"></td>
+                <td th:text="${e.positionTitle}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
