@@ -43,16 +43,12 @@ public class EmployeeController {
     }
 
     @GetMapping
-    public String list(Model model) {
-        model.addAttribute("employees", employeeService.findAll());
+    public String list(@ModelAttribute("criteria") SearchEmployeeRequest request, Model model) {
+        boolean searching = request.hasAny();
+        model.addAttribute("employees",
+                searching ? employeeService.search(request) : employeeService.findAll());
+        model.addAttribute("searching", searching);
         return "employees/list";
-    }
-
-    @GetMapping("/search")
-    public String search(@ModelAttribute("criteria") SearchEmployeeRequest request, Model model) {
-        if (request.hasAny())
-            model.addAttribute("employees", employeeService.search(request));
-        return "employees/search";
     }
 
     @GetMapping("/new")

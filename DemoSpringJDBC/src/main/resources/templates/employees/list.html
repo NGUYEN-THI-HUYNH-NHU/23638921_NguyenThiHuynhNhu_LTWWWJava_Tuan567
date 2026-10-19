@@ -7,7 +7,42 @@
     <h3>Danh sách nhân viên</h3>
     <div class="alert alert-success" th:if="${message}" th:text="${message}"></div>
 
-    <table class="table table-striped table-sm align-middle">
+    <!-- Form tìm kiếm -->
+    <form class="row g-2 mb-3" method="get" th:action="@{/employees}" th:object="${criteria}">
+        <div class="col-md-1">
+            <input class="form-control" placeholder="ID" th:field="*{id}" type="number">
+        </div>
+        <div class="col-md-3">
+            <input class="form-control" placeholder="Tên chứa..." th:field="*{name}">
+        </div>
+        <div class="col-md-1">
+            <input class="form-control" placeholder="Tuổi từ" th:field="*{minAge}" type="number">
+        </div>
+        <div class="col-md-1">
+            <input class="form-control" placeholder="đến" th:field="*{maxAge}" type="number">
+        </div>
+        <div class="col-md-2">
+            <input class="form-control" placeholder="Lương &gt;" step="any" th:field="*{minSalary}" type="number">
+        </div>
+        <div class="col-md-2">
+            <select class="form-select" th:field="*{positionId}">
+                <option value="">-- Chức vụ --</option>
+                <option th:each="p : ${positions}" th:text="${p.title}" th:value="${p.id}"></option>
+            </select>
+        </div>
+        <div class="col-md-2 d-flex gap-2">
+            <button class="btn btn-primary flex-fill">Tìm</button>
+            <a class="btn btn-outline-secondary" th:href="@{/employees}">Xóa lọc</a>
+        </div>
+    </form>
+
+    <p class="text-muted" th:if="${searching}">
+        Tìm thấy <b th:text="${#lists.size(employees)}"></b> kết quả.
+    </p>
+
+    <p class="text-muted" th:if="${#lists.isEmpty(employees)}">Không có nhân viên nào.</p>
+
+    <table class="table table-striped table-sm align-middle" th:unless="${#lists.isEmpty(employees)}">
         <thead class="table-dark">
         <tr>
             <th>ID</th>
