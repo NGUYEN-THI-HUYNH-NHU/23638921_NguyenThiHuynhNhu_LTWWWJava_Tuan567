@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Chi tiết nhân viên')}"></head>
+<body>
+<nav th:replace="~{fragments :: nav}"></nav>
+<div class="container" style="max-width: 640px">
+    <h3>Chi tiết nhân viên #<span th:text="${employee.id}"></span></h3>
+    <table class="table">
+        <tr>
+            <th>Họ tên</th>
+            <td th:text="${employee.name}"></td>
+        </tr>
+        <tr>
+            <th>Vai trò</th>
+            <td th:text="${employee.role}"></td>
+        </tr>
+        <tr>
+            <th>Tuổi</th>
+            <td th:text="${employee.age}"></td>
+        </tr>
+        <tr>
+            <th>Lương</th>
+            <td th:text="${#numbers.formatDecimal(employee.salary, 0, 'COMMA', 0, 'POINT')}"></td>
+        </tr>
+        <tr>
+            <th>Phòng ban</th>
+            <td th:text="${employee.departmentName}"></td>
+        </tr>
+        <tr>
+            <th>Chức vụ</th>
+            <td th:text="${employee.positionTitle}"></td>
+        </tr>
+    </table>
+    <a class="btn btn-primary" th:href="@{/employees/{id}/edit(id=${employee.id})}">Sửa</a>
+    <a class="btn btn-secondary" th:href="@{/employees}">Quay lại</a>
+</div>
+</body>
+</html>

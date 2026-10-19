@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Nhân viên')}"></head>
+<body>
+<nav th:replace="~{fragments :: nav}"></nav>
+<div class="container" style="max-width: 640px">
+    <h3 th:text="${employeeForm.id == null} ? 'Thêm nhân viên' : 'Sửa nhân viên #' + ${employeeForm.id}"></h3>
+
+    <form method="post" th:action="${employeeForm.id == null} ? @{/employees} : @{/employees/{id}(id=${employeeForm.id})}"
+          th:object="${employeeForm}">
+
+        <div class="mb-3">
+            <label class="form-label">Họ tên</label>
+            <input class="form-control" th:field="*{name}">
+            <div class="text-danger" th:errors="*{name}" th:if="${#fields.hasErrors('name')}"></div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Vai trò</label>
+            <input class="form-control" th:field="*{role}">
+        </div>
+        <div class="row">
+            <div class="col mb-3">
+                <label class="form-label">Tuổi</label>
+                <input class="form-control" th:field="*{age}" type="number">
+                <div class="text-danger" th:errors="*{age}" th:if="${#fields.hasErrors('age')}"></div>
+            </div>
+            <div class="col mb-3">
+                <label class="form-label">Lương</label>
+                <input class="form-control" step="any" th:field="*{salary}" type="number">
+                <div class="text-danger" th:errors="*{salary}" th:if="${#fields.hasErrors('salary')}"></div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Phòng ban</label>
+            <select class="form-select" th:field="*{departmentId}">
+                <option value="">-- Chọn phòng ban --</option>
+                <option th:each="d : ${departments}" th:text="${d.name}" th:value="${d.id}"></option>
+            </select>
+            <div class="text-danger" th:errors="*{departmentId}" th:if="${#fields.hasErrors('departmentId')}"></div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Chức vụ</label>
+            <select class="form-select" th:field="*{positionId}">
+                <option value="">-- Chọn chức vụ --</option>
+                <option th:each="p : ${positions}" th:text="${p.title}" th:value="${p.id}"></option>
+            </select>
+            <div class="text-danger" th:errors="*{positionId}" th:if="${#fields.hasErrors('positionId')}"></div>
+        </div>
+
+        <button class="btn btn-primary">Lưu</button>
+        <a class="btn btn-secondary" th:href="@{/employees}">Hủy</a>
+    </form>
+</div>
+</body>
+</html>
