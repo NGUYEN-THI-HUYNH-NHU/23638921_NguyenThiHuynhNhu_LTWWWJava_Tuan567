@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments :: head('Chi tiết nhân viên')}"></head>
 <body>
 <nav th:replace="~{fragments :: nav}"></nav>
@@ -18,7 +19,7 @@
             <th>Tuổi</th>
             <td th:text="${employee.age}"></td>
         </tr>
-        <tr>
+        <tr sec:authorize="hasAnyRole('USER','ADMIN')">
             <th>Lương</th>
             <td th:text="${#numbers.formatDecimal(employee.salary, 0, 'COMMA', 0, 'POINT')}"></td>
         </tr>
@@ -31,7 +32,8 @@
             <td th:text="${employee.positionTitle}"></td>
         </tr>
     </table>
-    <a class="btn btn-primary" th:href="@{/employees/{id}/edit(id=${employee.id})}">Sửa</a>
+    <a class="btn btn-primary" sec:authorize="hasAnyRole('USER','ADMIN')"
+       th:href="@{/employees/{id}/edit(id=${employee.id})}">Sửa</a>
     <a class="btn btn-secondary" th:href="@{/employees}">Quay lại</a>
 </div>
 </body>

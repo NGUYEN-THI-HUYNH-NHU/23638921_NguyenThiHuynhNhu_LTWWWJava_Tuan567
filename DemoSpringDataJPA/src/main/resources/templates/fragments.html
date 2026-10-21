@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:th="http://www.thymeleaf.org">
 <head th:fragment="head(title)">
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1" name="viewport">
@@ -9,11 +10,26 @@
 <body>
 <nav class="navbar navbar-expand navbar-dark bg-dark mb-4" th:fragment="nav">
     <div class="container">
-        <a class="navbar-brand" th:href="@{/employees}">Employee (Spring JDBC)</a>
-        <div class="navbar-nav">
+        <a class="navbar-brand" th:href="@{/employees}">Employee (Spring Data JPA)</a>
+
+        <div class="navbar-nav me-auto">
             <a class="nav-link" th:href="@{/employees}">Danh sách</a>
-            <a class="nav-link" th:href="@{/employees/new}">Thêm mới</a>
-            <a class="nav-link" th:href="@{/reports}">Thống kê</a>
+            <a class="nav-link" sec:authorize="hasAnyRole('USER','ADMIN')"
+               th:href="@{/employees/new}">Thêm mới</a>
+            <a class="nav-link" sec:authorize="hasAnyRole('USER','ADMIN')"
+               th:href="@{/reports}">Thống kê</a>
+        </div>
+
+        <div class="navbar-nav align-items-center" sec:authorize="isAuthenticated()">
+            <span class="navbar-text me-3">
+                Xin chào, <b sec:authentication="name"></b>
+                <span class="badge text-bg-secondary"
+                      th:text="${#authentication.authorities[0].authority}"></span>
+            </span>
+            <!-- Đăng xuất phải là POST kèm CSRF token (th:action tự thêm) -->
+            <form class="d-inline" method="post" th:action="@{/logout}">
+                <button class="btn btn-sm btn-outline-light">Đăng xuất</button>
+            </form>
         </div>
     </div>
 </nav>

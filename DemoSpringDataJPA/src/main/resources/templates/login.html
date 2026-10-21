@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Đăng nhập')}"></head>
+<body class="bg-light">
+<div class="container" style="max-width: 380px; margin-top: 10vh">
+    <div class="card shadow-sm">
+        <div class="card-body p-4">
+            <h4 class="text-center mb-3">Đăng nhập</h4>
+
+            <div class="alert alert-danger" th:if="${param.error}">
+                Sai tên đăng nhập hoặc mật khẩu.
+            </div>
+            <div class="alert alert-success" th:if="${param.logout}">
+                Bạn đã đăng xuất.
+            </div>
+
+            <!-- th:action tự thêm CSRF token. Tên field phải là username / password -->
+            <form method="post" th:action="@{/login}">
+                <div class="mb-3">
+                    <label class="form-label">Tên đăng nhập</label>
+                    <input autofocus class="form-control" name="username" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Mật khẩu</label>
+                    <input class="form-control" name="password" required type="password">
+                </div>
+                <button class="btn btn-primary w-100">Đăng nhập</button>
+            </form>
+
+            <p class="text-muted small mt-3 mb-0">
+                Tài khoản thử: guest/guest123, user/user123, admin/admin123
+            </p>
+        </div>
+    </div>
+</div>
+</body>
+</html>
