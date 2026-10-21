@@ -71,7 +71,7 @@ public class EmployeeController {
         return "redirect:/employees";
     }
 
-    @PreAuthorize("hasAnyRole('GUEST', 'USER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping("/{id}")
     public String detail(@PathVariable Integer id, Model model) {
         model.addAttribute("employee", employeeService.findById(id));
