@@ -16,6 +16,7 @@ import iuh.fit.demospringjdbc.service.EmployeeService;
 import iuh.fit.demospringjdbc.service.PositionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -42,6 +43,7 @@ public class EmployeeController {
         return positionService.findAll();
     }
 
+    @PreAuthorize("#request.minSalary == null or hasAnyRole('USER', 'ADMIN')")
     @GetMapping
     public String list(@ModelAttribute("criteria") SearchEmployeeRequest request, Model model) {
         boolean searching = request.hasAny();
@@ -51,12 +53,14 @@ public class EmployeeController {
         return "employees/list";
     }
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping("/new")
     public String newForm(Model model) {
         model.addAttribute("employeeForm", new SaveEmployeeRequest());
         return "employees/form";
     }
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @PostMapping
     public String create(@Valid @ModelAttribute("employeeForm") SaveEmployeeRequest request,
                          BindingResult result, RedirectAttributes redirect) {
@@ -67,18 +71,21 @@ public class EmployeeController {
         return "redirect:/employees";
     }
 
+    @PreAuthorize("hasAnyRole('GUEST', 'USER', 'ADMIN')")
     @GetMapping("/{id}")
     public String detail(@PathVariable Integer id, Model model) {
         model.addAttribute("employee", employeeService.findById(id));
         return "employees/detail";
     }
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable Integer id, Model model) {
         model.addAttribute("employeeForm", employeeService.getSaveRequest(id));
         return "employees/form";
     }
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @PostMapping("/{id}")
     public String update(@PathVariable Integer id,
                          @Valid @ModelAttribute("employeeForm") SaveEmployeeRequest request,
@@ -91,6 +98,7 @@ public class EmployeeController {
         return "redirect/:employees";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable Integer id, RedirectAttributes redirect) {
         employeeService.delete(id);

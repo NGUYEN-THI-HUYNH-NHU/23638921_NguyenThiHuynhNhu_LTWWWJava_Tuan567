@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments :: head('Danh sách nhân viên')}"></head>
 <body>
 <nav th:replace="~{fragments :: nav}"></nav>
@@ -21,7 +22,8 @@
         <div class="col-md-1">
             <input class="form-control" placeholder="đến" th:field="*{maxAge}" type="number">
         </div>
-        <div class="col-md-2">
+        <!-- Tìm theo lương: chỉ USER, ADMIN -->
+        <div class="col-md-2" sec:authorize="hasAnyRole('USER','ADMIN')">
             <input class="form-control" placeholder="Lương &gt;" step="any" th:field="*{minSalary}" type="number">
         </div>
         <div class="col-md-2">
@@ -49,10 +51,10 @@
             <th>Họ tên</th>
             <th>Vai trò</th>
             <th>Tuổi</th>
-            <th>Lương</th>
+            <th sec:authorize="hasAnyRole('USER','ADMIN')">Lương</th>
             <th>Phòng ban</th>
             <th>Chức vụ</th>
-            <th></th>
+            <th sec:authorize="hasAnyRole('USER','ADMIN')"></th>
         </tr>
         </thead>
         <tbody>
@@ -61,12 +63,16 @@
             <td><a th:href="@{/employees/{id}(id=${e.id})}" th:text="${e.name}"></a></td>
             <td th:text="${e.role}"></td>
             <td th:text="${e.age}"></td>
-            <td th:text="${#numbers.formatDecimal(e.salary, 0, 'COMMA', 0, 'POINT')}"></td>
+            <td sec:authorize="hasAnyRole('USER','ADMIN')"
+                th:text="${#numbers.formatDecimal(e.salary, 0, 'COMMA', 0, 'POINT')}"></td>
             <td th:text="${e.departmentName}"></td>
             <td th:text="${e.positionTitle}"></td>
-            <td class="text-end">
-                <a class="btn btn-sm btn-outline-primary" th:href="@{/employees/{id}/edit(id=${e.id})}">Sửa</a>
+            <td class="text-end" sec:authorize="hasAnyRole('USER','ADMIN')">
+                <a class="btn btn-sm btn-outline-primary"
+                   th:href="@{/employees/{id}/edit(id=${e.id})}">Sửa</a>
+                <!-- Nút xóa: chỉ ADMIN -->
                 <form class="d-inline" method="post" onsubmit="return confirm('Xóa nhân viên này?')"
+                      sec:authorize="hasRole('ADMIN')"
                       th:action="@{/employees/{id}/delete(id=${e.id})}">
                     <button class="btn btn-sm btn-outline-danger">Xóa</button>
                 </form>
