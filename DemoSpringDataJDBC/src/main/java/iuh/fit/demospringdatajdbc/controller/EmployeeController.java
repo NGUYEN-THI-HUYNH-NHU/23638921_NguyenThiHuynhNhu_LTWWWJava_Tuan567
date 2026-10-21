@@ -50,14 +50,7 @@ public class EmployeeController {
         model.addAttribute("searching", searching);
         return "employees/list";
     }
-
-    @GetMapping("/search")
-    public String search(@ModelAttribute("criteria") SearchEmployeeRequest request, Model model) {
-        if (request.hasAny())
-            model.addAttribute("employees", employeeService.search(request));
-        return "employees/search";
-    }
-
+    
     @GetMapping("/new")
     public String newForm(Model model) {
         model.addAttribute("employeeForm", new SaveEmployeeRequest());

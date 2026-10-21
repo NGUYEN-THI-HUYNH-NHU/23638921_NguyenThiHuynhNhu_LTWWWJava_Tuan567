@@ -34,7 +34,7 @@ public interface DepartmentRepository extends ListCrudRepository<Department, Int
     @Query("""
             SELECT d.id, d.name,
                 COALESCE(AVG(e.salary), 0) AS avg_salary,
-                COALESCE(SUM(e.salary), 0) AS total_salary,
+                COALESCE(SUM(e.salary), 0) AS total_salary
             FROM departments d LEFT JOIN employees e ON e.department_id = d.id
             GROUP BY d.id, d.name
             ORDER BY d.id
